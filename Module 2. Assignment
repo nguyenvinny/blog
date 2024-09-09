@@ -1,0 +1,9 @@
+> assignment2 <- c(6,18,14,22,27,17,22,20,22)
+#create vector (assignment2) using the c() function
+
+> myMean <- function(assignment2) {return(sum(assignment2)/length(assignment2))}
+#create function (myMean) that returns the sum of the vector divided by the length of the vector
+
+> myMean(assignment2)
+[1] 18.66667
+#run function myMean with vector (assignment2) to get 18.6667
