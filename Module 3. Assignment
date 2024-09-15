@@ -1,0 +1,39 @@
+> set1 <- c(10,2,3,2,4,2,5)
+> set2 <- c(20,12,13,12,14,12,15)
+> 
+> summary(set1)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    2.0     2.0     3.0     4.0     4.5    10.0 
+> summary(set2)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   12.0    12.0    13.0    14.0    14.5    20.0 
+> 
+> mode(set1)
+[1] "numeric"
+> mode(set2)
+[1] "numeric"
+> 
+> range(set1)
+[1]  2 10
+> range(set2)
+[1] 12 20
+> 
+> quantile(set1)
+  0%  25%  50%  75% 100% 
+ 2.0  2.0  3.0  4.5 10.0 
+> quantile(set2)
+  0%  25%  50%  75% 100% 
+12.0 12.0 13.0 14.5 20.0 
+> 
+> var(set1)
+[1] 8.333333
+> var(set2)
+[1] 8.333333
+> 
+> sd(set1)
+[1] 2.886751
+> sd(set2)
+[1] 2.886751
+> 
+> #variance and standard deviation are the same for both data sets (set1 & set2)
+> #mean, median, mode, and range of set2 are 10 higher than set1
