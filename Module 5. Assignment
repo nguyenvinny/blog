@@ -1,0 +1,106 @@
+> #Question 1:
+> #The director of manufacturing at a cookies company needs to determine whether a new machine is able to produce a particular type of cookies according to the manufacturer's specifications, which indicate that cookies should have a mean of 70 and standard deviation of 3.5 pounds. A sample of 49 cookies reveals a sample mean breaking strength of 69.1 pounds.
+> 
+> #A. State the null and alternative hypothesis _______
+> # Null Hypothesis: New machine is able to produce cookies to specifications for average strength.
+> # Alternative Hypothesis: New machine is not able to produce cookies to specifications for average strength.
+> 
+> #B. Is there evidence that the machine is not meeting the manufacturer's specifications for average strength? Use a 0.05 level of significance _______ 
+> a <- 70
+> s <- 3.5
+> n <- 49
+> xbar <- 69.1
+> z <- (xbar-a)/(s/sqrt(n)) 
+> 2*pnorm(-abs(z))
+[1] 0.07186064
+> z > 2*pnorm(-abs(z))
+[1] FALSE
+> alpha = .05
+> z.half.alpha = qnorm(1-alpha/2)
+> c(-z.half.alpha, z.half.alpha)
+[1] -1.959964  1.959964
+> z < -z.half.alpha
+[1] FALSE
+> z > z.half.alpha
+[1] FALSE
+> # We can say with 95% confidence that the machine is able to meet the manufacturer's specificaitons.
+> 
+> #C. Compute the p value and interpret its meaning _______
+> p <- 2*pnorm(z)
+> alpha > p
+[1] FALSE
+> #This means that there is weak evidence to conclude that the Alternative Hypothesis is true. Thus we reject the Alternative Hypothesis and accept the Null Hypothesis.
+> 
+> #D. What would be your answer in (B) if the standard deviation were specified as 1.75 pounds?______
+> a <- 70
+> s <- 1.75
+> n <- 49
+> xbar <- 69.1
+> z <- (xbar-a)/(s/sqrt(n)) 
+> 2*pnorm(-abs(z))
+[1] 0.0003182172
+> z > 2*pnorm(-abs(z))
+[1] FALSE
+> # There is overwhelming evidence that the machine is not able to mee the manufacturer's specificaitons.
+> 
+> #E. What would be your answer in (B) if the sample mean were 69 pounds and the standard deviation is 3.5 pounds? ______
+> a <- 70
+> s <- 3.5
+> n <- 49
+> xbar <- 69
+> z <- (xbar-a)/(s/sqrt(n)) 
+> 2*pnorm(-abs(z))
+[1] 0.04550026
+> z > 2*pnorm(-abs(z))
+[1] FALSE
+> # There is strong evidence that the machine is not able to mee the manufacturer's specificaitons.
+> 
+> #-------------------------------------------------------------------------------
+> 
+> #Question 2:
+> #If x̅ = 85, σ = standard deviation = 8, and n=64, set up 95% confidence interval estimate of the population mean μ.
+> 
+> xbar = 85
+> s = 8
+> n = 64
+> z95 = 1.96  
+> ME = (z95)*(s/sqrt(n))
+> UL = xbar + ME
+> LL = xbar - ME
+> # CI(95%)=(67.04;70.96)
+> 
+> #-------------------------------------------------------------------------------
+> 
+> #Question 3, using Correlation Analysis
+> #The correlation coefficient analysis formula:
+> #  (r) =[ nΣxy – (Σx)(Σy) / Sqrt([nΣx2 – (Σx)2][nΣy2 – (Σy)2])]
+> 
+> #r: The correlation coefficient is denoted by the letter r.
+> #n: Number of values. If we had five people we were calculating the correlation coefficient for, the value of n would be 5.
+> #x: This is the first data variable.
+> #y: This is the second data variable.
+> #Σ: The Sigma symbol (Greek) tells us to calculate the “sum of” whatever is tagged next to it.
+> 
+> #read_xls("C:/Users/crzy4/Documents/School/Module # 5.xls")
+>   
+> #In R 
+> x <- c(19,22,28)
+> y <- c(18.9,22.2,27.8)
+> df <- data.frame(x,y)
+> 
+> #Your assignment for Correlation Analysis
+> #Click here Download here  to download the data set. 
+> #The accompanying data are: x= girls and y =boys. (goals, time spend on assignment)  
+> 
+> #a. Calculate the correlation coefficient for this data set _____
+> cor(x,y)
+[1] 0.9991175
+> 
+> #b. Pearson correlation coefficient _____
+> cor(df,method="pearson")
+          x         y
+x 1.0000000 0.9991175
+y 0.9991175 1.0000000
+> 
+> #c. Create plot of the correlation
+> plot(x,y,xlab="Girls time spent on assignment",ylab="Boys time spent on assignment")
