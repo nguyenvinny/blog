@@ -1,1 +1,70 @@
-Work in progress
+> #Question 1
+> 
+> #A researcher is interested in the effects of drug against stress reaction. She gives a reaction time test to three different groups of subjects: one group that is under a great deal of stress, one group under a moderate amount of stress, and a third group that is under almost no stress. The subjects of the study were instructed to take the drug test during their next stress episode and to report their stress on a scale of 1 to 10 (10 being most pain).
+> 
+> high_stress <- c(10,9,8,9,10,8)
+> moderate_stress <- c(8,10,6,7,8,8)
+> low_stress <- c(4,6,6,4,2,2)
+> 
+> #Report on drug and stress level by using R. Provide a full summary report on the result of ANOVA testing and what does it mean. More specifically, report the following: Df, Sum, Sq Mean, Sq, F value, Pr(>F)
+> Stress_Rating <- c(high_stress, moderate_stress, low_stress)
+> Stress_Level <- factor(rep(c("High Stress", "Moderate Stress", "Low Stress"), each = 6))
+> stress_rl <- data.frame(Stress_Rating, Stress_Level)
+> 
+> anova_stress <- aov(Stress_Rating ~ Stress_Level, data = stress_rl)
+> summary(anova_stress)
+             Df Sum Sq Mean Sq F value   Pr(>F)    
+Stress_Level  2  82.11   41.06   21.36 4.08e-05 ***
+Residuals    15  28.83    1.92                     
+---
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+> 
+> 
+> #Question 2
+> 
+> #From our Textbook:Introductory Statistics with R. Chapter # 6 Exercises 6.1 pp. 127 plus.
+> #The zelazo data (taken from textbook's R package called ISwR) are in the form of a list of vectors, one for each of the four groups.
+> 
+> install.packages("ISwR")
+Error in install.packages : Updating loaded packages
+> data("zelazo")
+> zelazo
+$active
+[1]  9.00  9.50  9.75 10.00 13.00  9.50
+
+$passive
+[1] 11.00 10.00 10.00 11.75 10.50 15.00
+
+$none
+[1] 11.50 12.00  9.00 11.50 13.25 13.00
+
+$ctr.8w
+[1] 13.25 11.50 12.00 13.50 11.50
+
+> 
+> #2.1. Convert the data to a form suitable for the user of lm, and calculate the relevant test. Consider t tests comparing selected subgroups or obtained by combing groups.    
+> walking_age <- stack(zelazo)
+> names(walking_age) <- c("Months_Walking", "Group_Level")
+> 
+> t_test_result <- t.test(zelazo$active, zelazo$passive)
+> t_test_result
+
+	Welch Two Sample t-test
+
+data:  zelazo$active and zelazo$passive
+t = -1.2839, df = 9.3497, p-value = 0.2301
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -3.4399668  0.9399668
+sample estimates:
+mean of x mean of y 
+   10.125    11.375 
+
+> 
+> #2.2. Consider ANOVA test (one way or two-way) to this dataset (zelazo)
+> anova_walking <- aov(Months_Walking ~ Group_Level, data = walking_age)
+> summary(anova_walking)
+            Df Sum Sq Mean Sq F value Pr(>F)
+Group_Level  3  14.78   4.926   2.142  0.129
+Residuals   19  43.69   2.299      
