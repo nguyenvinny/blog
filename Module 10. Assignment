@@ -1,0 +1,215 @@
+> #Question 1. 
+> 
+> #Conduct ANOVA (analysis of variance) and Regression coefficients to the data from data (" cystfibr ") database. You can choose any variable you like to interpret. In the report, you need to state the result of coefficients and significance to any variables you like both under ANOVA and multivariate analysis. Please provide a specific interpretation of R results. 
+> 
+> install.packages("ISwR")
+Installing package into ‘C:/Users/crzy4/AppData/Local/R/win-library/4.4’
+(as ‘lib’ is unspecified)
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/4.4/ISwR_2.0-9.zip'
+Content type 'application/zip' length 221980 bytes (216 KB)
+downloaded 216 KB
+
+package ‘ISwR’ successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+	C:\Users\crzy4\AppData\Local\Temp\RtmpYLX9iB\downloaded_packages
+> library(ISwR)
+Warning message:
+package ‘ISwR’ was built under R version 4.4.2 
+> data("cystfibr")
+> par(mex=0.5)
+> pairs(cystfibr, gap=0, cex.labels=0.9)
+> attach(cystfibr)
+The following object is masked from package:ISwR:
+
+    tlc
+
+> 
+> lm(pemax ~ age + weight + bmp + fev1, data = cystfibr)
+
+Call:
+lm(formula = pemax ~ age + weight + bmp + fev1, data = cystfibr)
+
+Coefficients:
+(Intercept)          age       weight          bmp  
+    179.296       -3.418        2.688       -2.066  
+       fev1  
+      1.088  
+
+> anova(lm(pemax ~ age + weight + bmp + fev1, data=cystfibr))
+Analysis of Variance Table
+
+Response: pemax
+          Df  Sum Sq Mean Sq F value    Pr(>F)    
+age        1 10098.5 10098.5 18.4385 0.0003538 ***
+weight     1   945.2   945.2  1.7258 0.2038195    
+bmp        1  2379.7  2379.7  4.3450 0.0501483 .  
+fev1       1  2455.6  2455.6  4.4836 0.0469468 *  
+Residuals 20 10953.7   547.7                      
+---
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+> summary(lm(pemax ~ age + weight + bmp + fev1, data = cystfibr))
+
+Call:
+lm(formula = pemax ~ age + weight + bmp + fev1, data = cystfibr)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-42.521 -10.885   3.003  15.488  41.767 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)   
+(Intercept) 179.2957    61.8855   2.897  0.00891 **
+age          -3.4181     3.3086  -1.033  0.31389   
+weight        2.6882     1.1727   2.292  0.03287 * 
+bmp          -2.0657     0.8198  -2.520  0.02036 * 
+fev1          1.0882     0.5139   2.117  0.04695 * 
+---
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 23.4 on 20 degrees of freedom
+Multiple R-squared:  0.5918,	Adjusted R-squared:  0.5101 
+F-statistic: 7.248 on 4 and 20 DF,  p-value: 0.0008891
+
+> 
+> summary(lm(pemax ~ weight + bmp + fev1, data = cystfibr))
+
+Call:
+lm(formula = pemax ~ weight + bmp + fev1, data = cystfibr)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-42.388 -13.496   3.991  14.856  40.373 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 126.3336    34.7199   3.639 0.001536 ** 
+weight        1.5365     0.3644   4.216 0.000387 ***
+bmp          -1.4654     0.5793  -2.530 0.019486 *  
+fev1          1.1086     0.5144   2.155 0.042893 *  
+---
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 23.44 on 21 degrees of freedom
+Multiple R-squared:   0.57,	Adjusted R-squared:  0.5086 
+F-statistic: 9.279 on 3 and 21 DF,  p-value: 0.000418
+
+> anova(lm(pemax ~ weight + bmp + fev1, data=cystfibr))
+Analysis of Variance Table
+
+Response: pemax
+          Df  Sum Sq Mean Sq F value    Pr(>F)    
+weight     1 10827.2 10827.2 19.7059 0.0002274 ***
+bmp        1  1914.9  1914.9  3.4853 0.0759420 .  
+fev1       1  2552.4  2552.4  4.6454 0.0428926 *  
+Residuals 21 11538.2   549.4                      
+---
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+> 
+> #After doing the ANOVA test, it was shown that "weight", "bpm", and "fev1" are less than 0.05. This means that they are significant contributing coefficients to the variations of "pemax". After removing "age" and running the tests again, due to insignificance, we find that "weight" is the most significant coefficient.
+> 
+> 
+> #Question 2. 
+> 
+> #The secher data("secher") are best analyzed after log-transforming birth weight as well as the abdominal and biparietal diameters. Fit a prediction weight as well as abdominal and biparietal diameters. For a prediction equation for birth weight. How much is gained by using both diameters in a prediction equation? The sum of the two regression coefficients is almost identical and equal to 3. Can this be given a nice interpretation to our analysis?
+> 
+> data("secher")
+> model_ad <- lm(log(bwt) ~ I(log(ad)), data=secher)
+> summary(model_ad)
+
+Call:
+lm(formula = log(bwt) ~ I(log(ad)), data = secher)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.58560 -0.06609  0.00184  0.07479  0.48435 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  -2.4446     0.5103  -4.791 5.49e-06 ***
+I(log(ad))    2.2365     0.1105  20.238  < 2e-16 ***
+---
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.1275 on 105 degrees of freedom
+Multiple R-squared:  0.7959,	Adjusted R-squared:  0.794 
+F-statistic: 409.6 on 1 and 105 DF,  p-value: < 2.2e-16
+
+> 
+> model_bpd <- lm(log(bwt) ~ I(log(bpd)), data=secher)
+> summary(model_bpd)
+
+Call:
+lm(formula = log(bwt) ~ I(log(bpd)), data = secher)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.36478 -0.09725  0.01251  0.07703  0.51154 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  -7.0862     0.9062  -7.819 4.35e-12 ***
+I(log(bpd))   3.3320     0.2017  16.516  < 2e-16 ***
+---
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.1488 on 105 degrees of freedom
+Multiple R-squared:  0.7221,	Adjusted R-squared:  0.7194 
+F-statistic: 272.8 on 1 and 105 DF,  p-value: < 2.2e-16
+
+> 
+> model_combined <- lm(log(bwt) ~ I(log(ad)) + I(log(bpd)), data=secher)
+> summary(model_combined)
+
+Call:
+lm(formula = log(bwt) ~ I(log(ad)) + I(log(bpd)), data = secher)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.35074 -0.06741 -0.00792  0.05750  0.36360 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  -5.8615     0.6617  -8.859 2.36e-14 ***
+I(log(ad))    1.4667     0.1467   9.998  < 2e-16 ***
+I(log(bpd))   1.5519     0.2294   6.764 8.09e-10 ***
+---
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.1068 on 104 degrees of freedom
+Multiple R-squared:  0.8583,	Adjusted R-squared:  0.8556 
+F-statistic: 314.9 on 2 and 104 DF,  p-value: < 2.2e-16
+
+> anova(model_combined)
+Analysis of Variance Table
+
+Response: log(bwt)
+             Df Sum Sq Mean Sq F value    Pr(>F)    
+I(log(ad))    1 6.6613  6.6613 584.102 < 2.2e-16 ***
+I(log(bpd))   1 0.5217  0.5217  45.749 8.089e-10 ***
+Residuals   104 1.1861  0.0114                      
+---
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+> anova(model_ad,model_bpd)
+Analysis of Variance Table
+
+Model 1: log(bwt) ~ I(log(ad))
+Model 2: log(bwt) ~ I(log(bpd))
+  Res.Df    RSS Df Sum of Sq F Pr(>F)
+1    105 1.7078                      
+2    105 2.3261  0  -0.61832         
+> 
+> #By using both diameters, we were able to get 85.8% variablity. Which is a larger than the 79.6% and 72.2% obtained individually. And with both coefficients being almost identical and adding up to 3 validates the relationship between the diameter and birth weight.
+> 
+> 
+> #Just an additional question (this will not be graded). When should we consider "log-transforming" a dataset? This is a very common practice in data science.
+> 
+> #We consider this when the dataset is skewed, there is asymmetry or patterns, outliers are present, exponetial growth, or when it is nonlinear.
