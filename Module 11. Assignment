@@ -1,0 +1,207 @@
+> #Question 1. 10.1
+> 
+> #Set up an additive model for the ashina data, as part of ISwR package
+> library(ISwR)
+> data("ashina")
+> summary(ashina)
+   vas.active         vas.plac            grp       
+ Min.   :-167.00   Min.   :-102.00   Min.   :1.000  
+ 1st Qu.: -81.25   1st Qu.: -36.75   1st Qu.:1.000  
+ Median : -51.50   Median :  -5.00   Median :1.000  
+ Mean   : -56.81   Mean   : -13.94   Mean   :1.375  
+ 3rd Qu.: -14.25   3rd Qu.:  11.25   3rd Qu.:2.000  
+ Max.   :  29.00   Max.   :  32.00   Max.   :2.000  
+> head(ashina)
+  vas.active vas.plac grp
+1       -167     -102   1
+2       -127      -39   1
+3        -58       32   1
+4       -103       28   1
+5        -35       16   1
+6       -164      -42   1
+> str(ashina)
+'data.frame':	16 obs. of  3 variables:
+ $ vas.active: int  -167 -127 -58 -103 -35 -164 -3 25 -61 -45 ...
+ $ vas.plac  : int  -102 -39 32 28 16 -42 -27 -30 -47 8 ...
+ $ grp       : int  1 1 1 1 1 1 1 1 1 1 ...
+> 
+> #This data contain additive effects on subjects, period and treatment. Compare the results with those obtained from t tests. 
+> ashina$subject <- factor(1:16)
+> attach(ashina)
+The following objects are masked from ashina (pos = 3):
+
+    grp, subject, vas.active, vas.plac
+
+The following objects are masked from ashina (pos = 4):
+
+    grp, subject, vas.active, vas.plac
+
+The following objects are masked from ashina (pos = 5):
+
+    grp, subject, vas.active, vas.plac
+
+> 
+> act <- data.frame(vas=vas.active, subject, treat=1, period=grp)
+> plac <-data.frame(vas=vas.plac, subject, treat=0, period=grp)
+> 
+> ashina_combine <- rbind(act, plac)
+> model <- lm(vas ~ subject + treat + period, data = ashina_combine)
+> 
+> summary(model)
+
+Call:
+lm(formula = vas ~ subject + treat + period, data = ashina_combine)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-48.94 -18.44   0.00  18.44  48.94 
+
+Coefficients: (1 not defined because of singularities)
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  -113.06      27.39  -4.128 0.000895 ***
+subject2       51.50      37.58   1.370 0.190721    
+subject3      121.50      37.58   3.233 0.005573 ** 
+subject4       97.00      37.58   2.581 0.020867 *  
+subject5      125.00      37.58   3.326 0.004604 ** 
+subject6       31.50      37.58   0.838 0.415070    
+subject7      119.50      37.58   3.180 0.006215 ** 
+subject8      132.00      37.58   3.513 0.003142 ** 
+subject9       80.50      37.58   2.142 0.049003 *  
+subject10     116.00      37.58   3.087 0.007518 ** 
+subject11     121.50      37.58   3.233 0.005573 ** 
+subject12     154.50      37.58   4.111 0.000925 ***
+subject13     131.00      37.58   3.486 0.003318 ** 
+subject14     125.00      37.58   3.326 0.004604 ** 
+subject15      99.00      37.58   2.634 0.018768 *  
+subject16      80.50      37.58   2.142 0.049003 *  
+treat         -42.87      13.29  -3.227 0.005644 ** 
+period            NA         NA      NA       NA    
+---
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 37.58 on 15 degrees of freedom
+Multiple R-squared:  0.7566,	Adjusted R-squared:  0.4969 
+F-statistic: 2.914 on 16 and 15 DF,  p-value: 0.02229
+
+> t.test(ashina$vas.active, ashina$vas.plac, paired = TRUE)
+
+	Paired t-test
+
+data:  ashina$vas.active and ashina$vas.plac
+t = -3.2269, df = 15, p-value = 0.005644
+alternative hypothesis: true mean difference is not equal to 0
+95 percent confidence interval:
+ -71.1946 -14.5554
+sample estimates:
+mean difference 
+        -42.875 
+
+> #The combined results of the tests shows that there is a mean difference of -43.875, with a p-value of 0.005644. The p-value being less than 0.05 means that the results are significant and the average reduction in pain is roughly 43.9%. And we are 95% confident that the reduction in pain is roughly from 71.2% to 14.6%.
+> 
+> 
+> #Question 2. 10.3.
+>                   
+> #Consider the following
+> a <- gl(2, 2, 8) # Creates factor with 2 levels, each repeated 2 times, length 8
+> b <- gl(2, 4, 8) # Creates factor with 2 levels, each repeated 4 times, length 8
+> x <- 1:8
+> y <- c(1:4, 8:5)
+> z <- rnorm (8)
+>                   
+> #Your assignment is to generate the model matrices for models
+>   #Model with interaction (a*b): (z ~ a*b).
+> InteractionModel_matrix <- model.matrix(~ a*b)
+> InteractionModel_matrix
+  (Intercept) a2 b2 a2:b2
+1           1  0  0     0
+2           1  0  0     0
+3           1  1  0     0
+4           1  1  0     0
+5           1  0  1     0
+6           1  0  1     0
+7           1  1  1     1
+8           1  1  1     1
+attr(,"assign")
+[1] 0 1 2 3
+attr(,"contrasts")
+attr(,"contrasts")$a
+[1] "contr.treatment"
+
+attr(,"contrasts")$b
+[1] "contr.treatment"
+
+> 
+> InteractionModel <- lm(z ~ a*b)
+> summary(InteractionModel)
+
+Call:
+lm(formula = z ~ a * b)
+
+Residuals:
+      1       2       3       4       5       6 
+-1.4739  1.4739 -0.2146  0.2146 -0.6282  0.6282 
+      7       8 
+ 0.5235 -0.5235 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)
+(Intercept)  -0.4003     0.8496  -0.471    0.662
+a2            0.9402     1.2015   0.783    0.478
+b2            1.7694     1.2015   1.473    0.215
+a2:b2        -2.7619     1.6992  -1.625    0.179
+
+Residual standard error: 1.202 on 4 degrees of freedom
+Multiple R-squared:  0.4382,	Adjusted R-squared:  0.01687 
+F-statistic:  1.04 on 3 and 4 DF,  p-value: 0.4655
+
+> 
+>   #Model with only interaction term (a:b): (z ~ a:b).
+> InteractionTermModel_matrix <- model.matrix(~ a:b)
+> InteractionTermModel_matrix
+  (Intercept) a1:b1 a2:b1 a1:b2 a2:b2
+1           1     1     0     0     0
+2           1     1     0     0     0
+3           1     0     1     0     0
+4           1     0     1     0     0
+5           1     0     0     1     0
+6           1     0     0     1     0
+7           1     0     0     0     1
+8           1     0     0     0     1
+attr(,"assign")
+[1] 0 1 1 1 1
+attr(,"contrasts")
+attr(,"contrasts")$a
+[1] "contr.treatment"
+
+attr(,"contrasts")$b
+[1] "contr.treatment"
+
+> 
+> InteractionTermModel <- lm(z ~ a:b)
+> summary(InteractionModel)
+
+Call:
+lm(formula = z ~ a * b)
+
+Residuals:
+      1       2       3       4       5       6 
+-1.4739  1.4739 -0.2146  0.2146 -0.6282  0.6282 
+      7       8 
+ 0.5235 -0.5235 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)
+(Intercept)  -0.4003     0.8496  -0.471    0.662
+a2            0.9402     1.2015   0.783    0.478
+b2            1.7694     1.2015   1.473    0.215
+a2:b2        -2.7619     1.6992  -1.625    0.179
+
+Residual standard error: 1.202 on 4 degrees of freedom
+Multiple R-squared:  0.4382,	Adjusted R-squared:  0.01687 
+F-statistic:  1.04 on 3 and 4 DF,  p-value: 0.4655
+
+> 
+> #We created and tested 2 models. InteractionModel includes results from a and b individually. This allows us to see the effects of each on z. 
+> 
+> #The IntereactionTermModel provides results on a and b in unison, but leaves out data on them seperately. This lets us see how a and b work together to influence z.
