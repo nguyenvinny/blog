@@ -1,0 +1,64 @@
+> #Question 1
+> 
+> #The table below represents charges for a student credit card.
+> 
+> #a. Construct a time series plot using R.
+> Charge<-c(31.9,27,31.3,31,39.4,40.7,42.3,49.5,45,50,50.9,58.5,39.4,36.2,40.5,44.6,46.8,44.7,52.2,54,48.8 ,55.8,58.7,63.4)
+> Chargetimeseries <- ts(Charge, frequency = 12, start = c(2012,1))
+> Chargetimeseries
+      Jan  Feb  Mar  Apr  May  Jun  Jul  Aug  Sep  Oct
+2012 31.9 27.0 31.3 31.0 39.4 40.7 42.3 49.5 45.0 50.0
+2013 39.4 36.2 40.5 44.6 46.8 44.7 52.2 54.0 48.8 55.8
+      Nov  Dec
+2012 50.9 58.5
+2013 58.7 63.4
+> plot.ts(Chargetimeseries)
+> 
+> #b. Employ Exponential Smoothing Model as outline in Avril VoghlanLinks to an external site.'s notes and report the statistical  outcome
+> Chargeforecast <- HoltWinters(Chargetimeseries)
+> Chargeforecast
+Holt-Winters exponential smoothing with trend and additive seasonal component.
+
+Call:
+HoltWinters(x = Chargetimeseries)
+
+Smoothing parameters:
+ alpha: 0.4786973
+ beta : 0
+ gamma: 0.1
+
+Coefficients:
+           [,1]
+a    51.4481469
+b     0.6088578
+s1   -6.6831338
+s2  -10.5867440
+s3   -6.6998393
+s4   -3.0320795
+s5   -1.4068647
+s6   -4.0422184
+s7    0.4727766
+s8    6.6378768
+s9    1.4431586
+s10   5.6809745
+s11   5.7999737
+s12  12.6976853
+> 
+> #c. Provide a discussion on time series and Exponential Smoothing Model result you led to.
+> plot(Chargeforecast)
+> Chargeforecast$fitted
+             xhat    level     trend      season
+Jan 2013 35.26656 41.55631 0.6088578  -6.8986111
+Feb 2013 34.05408 44.14384 0.6088578 -10.6986111
+Mar 2013 39.64435 45.77994 0.6088578  -6.7444444
+Apr 2013 44.36281 46.79839 0.6088578  -3.0444444
+May 2013 46.71854 47.52079 0.6088578  -1.4111111
+Jun 2013 44.73723 48.16865 0.6088578  -4.0402778
+Jul 2013 49.71160 48.75968 0.6088578   0.3430556
+Aug 2013 58.01581 50.55973 0.6088578   6.8472222
+Sep 2013 51.43565 49.24623 0.6088578   1.5805556
+Oct 2013 54.83283 48.59341 0.6088578   5.6305556
+Nov 2013 55.92967 49.66525 0.6088578   5.6555556
+Dec 2013 64.98968 51.60026 0.6088578  12.7805556
+> Chargeforecast$SSE
+[1] 62.88946
